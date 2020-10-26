@@ -136,49 +136,7 @@ df8.rep.bed <- chips.res.merge[chips.res.merge$id %in% df8.rep$id, ]
 df8.rep.gr <- regioneR::toGRanges(df8.rep.bed[, 1:3])
 
 
-setwd("~/motifs/")
-write.bed(df8.rep[])
 
     
-#### chromHMM vs GSEA - which types of CREs are linked to each pathway?
 
-nc.2.df <- data.frame(nc.2)
-nc.2.regs <- region.list(nc.2.df)
-nc.2.regs$type <- "all"
-
-pathways.chromhmm <- data.frame()
-
-for(i in 1:12){
-  gene_list <- data.frame(gsea.sig[1,8])
-  colnames(gene_list) <- "gene_name"
-  rna.res <- tss.ext.coord[tss.ext.coord$gene_name %in% gene_list$gene_name, ]
-  ols <- findOverlaps(toGRanges(nc.2.regs), toGRanges(rna.res))
-  hits <- data.frame(nc.2.regs[rownames(nc.2.regs) %in% queryHits(ols), ])
-  hits <- hits[!duplicated(hits[, 1:3]), ]
-  hits_chromhmm <- ac.vs.chromhmm(hits)
-  hits_chromhmm$pathway <- gsea.sig[i,1]
-  pathways.chromhmm <- rbind(pathways.chromhmm, hits_chromhmm)
-}
-
-
-pathways.chromhmm$ChromHMM_annotation <- factor(pathways.chromhmm$ChromHMM_annotation, 
-                                              levels=c("Active promoter",
-                                                       "Weak promoter",
-                                                       "Poised promoter",
-                                                       "Transcribed",
-                                                       "Strong enhancer",
-                                                       "Weak enhancer",
-                                                       "Insulator",
-                                                       "Repressed",
-                                                       "No hit"))
-
-ggplot(pathways.chromhmm,
-       aes(pathway, ..count..)) +
-  geom_bar(aes(fill=factor(ChromHMM_annotation)), position="fill", color="black") +
-  scale_fill_manual(values=cols,
-                    name=expression("HI ChromHMM")) +
-  scale_y_continuous(name="Percentage (%)",
-                     labels=function(x) x*100) +
-  xlab("H3K27ac type") +
-  cowplot::theme_cowplot()
       
