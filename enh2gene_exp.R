@@ -4,14 +4,15 @@
 library(regioneR)
 library(ggplot2)
 
+## create list of CRE groups
 dfs.gene.exp <- list(df7.all, df8.all, df9)
 
-#df1.all, df2.all, df4.all, df5.all,
-
+## prepare RNA-seq data with coordinates extended up and downstream of each TSS
 tss.ext.coord <- tss.ext.qlf.cut[, 1:4]
 colnames(tss.ext.coord) <- c("chr", "start", "end", "logFC")
 tss.ext.qlf.gr <- toGRanges(tss.ext.coord)
 
+## iterate through CRE groups and get log2FC for each transcript overlapping CREs
 gene.exp.dv <- data.frame()
 
 for(i in dfs.gene.exp){
@@ -28,6 +29,7 @@ colnames(gene.exp.dv) <- c("log2FC", "volcano_group")
 
 setwd("~/Thesis/")
 
+## plot results
 png(filename='enh2gene_exp.png', height = 700, width=700)
 ggplot(gene.exp.dv,
        aes(volcano_group, log2FC)) +
