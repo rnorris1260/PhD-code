@@ -1,0 +1,20 @@
+library(regioneR)
+
+genome <- getGenome("hg38")
+
+for(i in 1:9){
+  genes <- gsea.genes(gsea.res, i)
+  genes.gr <- regioneR::toGRanges(genes)
+  
+  pt <- overlapPermTest(A=genes.gr, B=toGRanges(enh), ntimes=1000, genome = genome,
+                        alternative = "greater", verbose = TRUE)
+  GSEA.vs.CRE[i,2] <- pt$numOverlaps$pval
+}
+
+colnames(GSEA.vs.CRE)[2] <- c("enh.pval")
+
+GSEA.vs.CRE$enh.FDR <- p.adjust(GSEA.vs.CRE$enh.pval, method = "bonferroni", n = 9)
+
+### repeat for all enhancer groups
+
+GSEA.vs.CRE.FDR <- GSEA.vs.CRE[, c(1,3,5,7,9,11,13,15,17,19)]
