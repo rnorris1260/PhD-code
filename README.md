@@ -1,1 +1,1 @@
-# hello-world
+This repository contains a collection of scripts written in R to process, analyse and integrate RNA-seq, ChIP-seq and ATAC-seq data for the purpose of deciphering gene-regulatory mechanisms involved in tumour development. They have been developed during the course of my PhD in Bioinformatics at the University of Barcelona. 
